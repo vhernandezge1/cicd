@@ -28,7 +28,7 @@ jobs:
           cache-dependency-path: server/package-lock.json
 
       - name: installer les dépendances
-        run: npm ci
+        run: npm install
 
       - name: exécute les tests
         run: npm run test:ci
