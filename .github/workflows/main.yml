@@ -2,68 +2,59 @@ name: main
 
 env:
   SERVER_USER: 'root'
-  SERVER_IP: '54.37.11.162' 
+  SERVER_IP: '54.37.11.162'
 
-# Paramètres pour gérer la concurrence des jobs
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }} # Groupe de concurrence basé sur le nom du workflow et la référence git
-  cancel-in-progress: true # Annule les jobs en cours si un nouveau job est lancé dans le même groupe
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-# Événement déclenchant le workflow
 on:
-  push: # Déclenché lors d'un push
-    branches: # Sur la branche spécifiée
-      - main # Branche "main"
+  push:
+    branches:
+      - main
 
-# Description des jobs à exécuter
 jobs:
-  # Job pour les tests
   tests:
-    runs-on: ubuntu-latest # Exécute sur la dernière version d'Ubuntu
-    defaults: # Options par défaut pour les étapes
+    runs-on: ubuntu-latest
+    defaults:
       run:
-        working-directory: server # Dossier de travail par défaut
+        working-directory: cicd # Modifier le chemin de travail ici
     steps:
-      - name: checkout le code # Récupère le code source
-        uses: actions/checkout@v4 # Utilise l'action de checkout
+      - name: Checkout le code
+        uses: actions/checkout@v4
 
-      - name: installer Node.js # Installe Node.js
-        uses: actions/setup-node@v4  # Utilise l'action setup-node
+      - name: installer Node.js
+        uses: actions/setup-node@v4
         with: 
           node-version: '20'
-          cache: 'npm' # Met en cache les dépendances npm
-          cache-dependency-path: server/package-lock.json # Chemin du fichier package-lock.json
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
 
-      - name: installer les dépendances # Installe les dépendances npm
-        run: | # Commandes shell à exécuter
-          npm ci  # Installe les dépendances en mode "clean install"
+      - name: installer les dépendances
+        run: npm ci
 
-      - name: exécute les tests # Exécute les tests
-        run: |
-          npm run test:ci  # Exécute le script de test
+      - name: exécute les tests
+        run: npm run test:ci
 
-      - name: vérifie le code # Exécute le linter sur le code
-        run: |
-          npm run lint  # Exécute le script de lint
+      - name: vérifie le code
+        run: npm run lint
 
-      - name: vérifie les vulnérabilités # Vérifie les vulnérabilités des dépendances
-        run: |
-          npm audit  # Utilise npm audit pour identifier les vulnérabilités
+      - name: vérifie les vulnérabilités
+        run: npm audit
 
-  # Job pour le déploiement
   deploy:
-    needs: tests # Dépend du job "tests"
-    runs-on: ubuntu-latest # Exécute sur la dernière version d'Ubuntu
+    needs: tests
+    runs-on: ubuntu-latest
     steps:
-      - name: checkout le code # Récupère le code source
-        uses: actions/checkout@v4 # Utilise l'action de checkout
+      - name: Checkout le code
+        uses: actions/checkout@v4
 
-      - name: déployer sur le serveur # Étape de déploiement
-        run: | # Commandes shell à exécuter
-          eval $(ssh-agent -s)  # Initialise l'agent SSH
+      - name: déployer sur le serveur
+        run: |
+          eval $(ssh-agent -s)
         
-          mkdir -p ~/.ssh  # Crée le dossier .ssh si nécessaire
-          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts  # Ajoute le serveur aux hôtes connus
-          scp -r ./server $SERVER_USER@$SERVER_IP:/var/www  # Copie le code sur le serveur
-          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"  # Installe les dépendances sur le serveur
-          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"  # Démarre ou redémarre le service avec pm2
+          mkdir -p ~/.ssh
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+          scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
+          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
+          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
