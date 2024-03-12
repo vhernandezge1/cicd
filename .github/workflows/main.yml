@@ -44,20 +44,21 @@ jobs:
         run: npm audit
 
   deploy:
-          needs: tests
-          runs-on: ubuntu-latest
-          steps:
-            - name: Checkout le code
-              uses: actions/checkout@v4
-                
-            - name: Déployer sur le serveur
-              env:
-                SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-              run: |
-                echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-                chmod 600 ~/.ssh/id_rsa
-                        
-                ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-                scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
-                ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
-                ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout le code
+        uses: actions/checkout@v4
+
+      - name: Déployer sur le serveur
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh  # Crée le répertoire ~/.ssh s'il n'existe pas
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+          scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
+          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
+          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
