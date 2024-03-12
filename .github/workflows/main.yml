@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory:  .. / cicd
+        working-directory:  .
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
