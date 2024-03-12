@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4 # Utilise l'action de checkout
 
       - name: installer Node.js # Installe Node.js
-        uses: actions/setup-node@v5  # Utilise l'action setup-node
+        uses: actions/setup-node@v4  # Utilise l'action setup-node
         with: 
           node-version: '20'
           cache: 'npm' # Met en cache les dépendances npm
