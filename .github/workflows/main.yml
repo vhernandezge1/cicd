@@ -1,10 +1,8 @@
-# Nom du workflow de CI/CD
 name: main
 
-# Variables d'environnement globales utilisées dans le workflow
 env:
-  SERVER_USER: 'root' # Utilisateur du serveur
-  SERVER_IP: '54.37.11.162' # Adresse IP du serveur
+  SERVER_USER: 'root'
+  SERVER_IP: '54.37.11.162' 
 
 # Paramètres pour gérer la concurrence des jobs
 concurrency:
@@ -63,7 +61,7 @@ jobs:
       - name: déployer sur le serveur # Étape de déploiement
         run: | # Commandes shell à exécuter
           eval $(ssh-agent -s)  # Initialise l'agent SSH
-          ssh-add - <<< "${{ secrets.OVH_PROD_PKEY }}"  # Ajoute la clé SSH privée
+        
           mkdir -p ~/.ssh  # Crée le dossier .ssh si nécessaire
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts  # Ajoute le serveur aux hôtes connus
           scp -r ./server $SERVER_USER@$SERVER_IP:/var/www  # Copie le code sur le serveur
