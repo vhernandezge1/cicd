@@ -1,5 +1,5 @@
 # Nom du workflow de CI/CD
-name: CI/CD workflow
+name: main
 
 # Variables d'environnement globales utilisées dans le workflow
 env:
