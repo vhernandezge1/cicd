@@ -26,6 +26,6 @@ jobs:
         run: |
           mkdir %USERPROFILE%\.ssh
           echo %SSH_PRIVATE_KEY% > %USERPROFILE%\.ssh\id_rsa
-          scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
-          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
-          ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
+          scp -r ./server ${SERVER_USER}@${SERVER_IP}:/var/www
+          ssh ${SERVER_USER}@${SERVER_IP} "cd /var/www/server && npm install --omit=dev"
+          ssh ${SERVER_USER}@${SERVER_IP} "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
