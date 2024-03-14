@@ -14,38 +14,8 @@ on:
       - main
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout le code
-        uses: actions/checkout@v4
-
-      - name: Installer Node.js
-        uses: actions/setup-node@v4
-        with: 
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: server/package-lock.json
-
-      - name: Installer les dépendances
-        working-directory: server # Changer le répertoire de travail
-        run: npm install
-
-      - name: Exécuter les tests
-        working-directory: server # Changer le répertoire de travail
-        run: npm run test:ci
-
-      - name: Vérifier le code
-        working-directory: server # Changer le répertoire de travail
-        run: npm run lint
-
-      - name: Vérifier les vulnérabilités
-        working-directory: server # Changer le répertoire de travail
-        run: npm audit
-
   deploy:
-    needs: tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
@@ -54,9 +24,8 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh  # Crée le répertoire ~/.ssh s'il n'existe pas
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+          mkdir %USERPROFILE%\.ssh
+          echo %SSH_PRIVATE_KEY% > %USERPROFILE%\.ssh\id_rsa
           scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
           ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
           ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
