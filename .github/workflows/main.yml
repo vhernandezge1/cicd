@@ -49,7 +49,6 @@ jobs:
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
-
       - name: Déployer sur le serveur
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -60,4 +59,5 @@ jobs:
           scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
           ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
           ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && pm2 startOrRestart ecosystem.config.js --env production && pm2 save"
+
 
