@@ -56,8 +56,6 @@ jobs:
         run: |
           mkdir -p ~/.ssh  # Crée le répertoire ~/.ssh s'il n'existe pas
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
           scp -r ./server $SERVER_USER@$SERVER_IP:/var/www
           ssh $SERVER_USER@$SERVER_IP "cd /var/www/server && npm install --omit=dev"
