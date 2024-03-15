@@ -45,13 +45,14 @@ jobs:
 
   deploy:
     needs: tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
       - name: Déployer sur le serveur
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          
         run: |
           mkdir -p ~/.ssh  # Crée le répertoire ~/.ssh s'il n'existe pas
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
