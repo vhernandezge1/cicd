@@ -54,7 +54,6 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          
         run: |
           New-Item -Path $env:USERPROFILE\.ssh -ItemType Directory -Force
           Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $env:SSH_PRIVATE_KEY
