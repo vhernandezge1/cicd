@@ -3,7 +3,7 @@ name: main
 
 env:
   SERVER_USER: 'root'
-  SERVER_IP: 'valentin'
+  SERVER_IP: 'Valentin'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
