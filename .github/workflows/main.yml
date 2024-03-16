@@ -58,7 +58,9 @@ jobs:
         run: |
           New-Item -Path $env:USERPROFILE\.ssh -ItemType Directory -Force
           Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $env:SSH_PRIVATE_KEY
-          ssh-keyscan -H $env:SERVER_IP | Out-File -Append -FilePath $env:USERPROFILE\.ssh\known_hosts
+          ssh-keyscan -H $env:SERVER_IP | Out-File -Append -FilePath $env:USERPROFILE\.ssh\known_hosts 
+          echo "connected"
+          echo $env:SERVER_IP
         #  Copy-Item -Path server -Destination "$env:SERVER_USER@$env:SERVER_IP:/var/www" -Recurse -Force
         #  ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; npm install --omit=dev"
         #  ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; pm2 startOrRestart ecosystem.config.js --env production ; pm2 save"
