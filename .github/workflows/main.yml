@@ -28,6 +28,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: chemin/vers/package-lock.json
 
+      - name: Nettoyer le cache npm
+        run: npm cache clean --force
+        
       - name: Installer les dépendances
         working-directory: server # Remplacez "server" par votre répertoire contenant les dépendances
         run: npm install
