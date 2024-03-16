@@ -3,7 +3,7 @@ name: main
 
 env:
   SERVER_USER: 'root'
-  SERVER_IP: '54.37.11.162'
+  SERVER_IP: '192.168.1.38'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -53,14 +53,15 @@ jobs:
       - name: Déployer sur le serveur
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
+          
+          
         run: |
           New-Item -Path $env:USERPROFILE\.ssh -ItemType Directory -Force
           Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $env:SSH_PRIVATE_KEY
           ssh-keyscan -H $env:SERVER_IP | Out-File -Append -FilePath $env:USERPROFILE\.ssh\known_hosts
           Copy-Item -Path server -Destination "$env:SERVER_USER@$env:SERVER_IP:/var/www" -Recurse -Force
-          ssh -p 443 -R0:localhost:3000 -L4300:localhost:4300 qr@a.pinggy.io "cd /var/www/server ; npm install --omit=dev"
-          ssh -p 443 -R0:localhost:3000 -L4300:localhost:4300 qr@a.pinggy.io "cd /var/www/server ; pm2 startOrRestart ecosystem.config.js --env production ; pm2 save"
+          ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; npm install --omit=dev"
+          ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; pm2 startOrRestart ecosystem.config.js --env production ; pm2 save"
 
 
 
