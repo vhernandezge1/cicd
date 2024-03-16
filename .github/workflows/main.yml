@@ -1,4 +1,5 @@
-name: CI/CD Pipeline
+name: main
+
 
 env:
   SERVER_USER: 'root'
@@ -14,55 +15,46 @@ on:
       - main
 
 jobs:
-  build:
+  tests:
     runs-on: windows-latest
-
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
 
       - name: Installer Node.js
         uses: actions/setup-node@v4
-        with:
-          node-version: '14' # Remplacez par la version de Node.js souhaitée
+        with: 
+          node-version: '20'
           cache: 'npm'
-          cache-dependency-path: chemin/vers/package-lock.json
+          cache-dependency-path: server/package-lock.json
 
-      - name: Nettoyer le cache npm
-        run: npm cache clean --force
-        
       - name: Installer les dépendances
-        working-directory: server # Remplacez "server" par votre répertoire contenant les dépendances
+        working-directory: server
         run: npm install
 
-      - name: Lint/Formatage
-        working-directory: server # Remplacez "server" par votre répertoire contenant les fichiers à lint/formater
+      - name: Exécuter les tests
+        working-directory: server
+        run: npm run test:ci
+
+      - name: Vérifier le code
+        working-directory: server
         run: npm run lint
 
-      - name: Exécuter les tests unitaires
-        working-directory: server # Remplacez "server" par votre répertoire contenant les tests unitaires
-        run: npm run test:unit
-
-      - name: Exécuter les tests d'intégration
-        working-directory: server # Remplacez "server" par votre répertoire contenant les tests d'intégration
-        run: npm run test:integration
-
-      - name: Exécuter les tests E2E
-        working-directory: server # Remplacez "server" par votre répertoire contenant les tests E2E
-        run: npm run test:e2e
+      - name: Vérifier les vulnérabilités
+        working-directory: server
+        run: npm audit
 
   deploy:
-    needs: build
+    needs: tests
     runs-on: windows-latest
-
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
-
       - name: Déployer sur le serveur
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
+          
+          
         run: |
           New-Item -Path $env:USERPROFILE\.ssh -ItemType Directory -Force
           Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $env:SSH_PRIVATE_KEY
@@ -70,3 +62,6 @@ jobs:
           Copy-Item -Path server -Destination "$env:SERVER_USER@$env:SERVER_IP:/var/www" -Recurse -Force
           ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; npm install --omit=dev"
           ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; pm2 startOrRestart ecosystem.config.js --env production ; pm2 save"
+
+
+
