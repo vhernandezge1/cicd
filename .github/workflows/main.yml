@@ -47,6 +47,9 @@ jobs:
     needs: tests
     runs-on: windows-latest
     steps:
+      - name: Afficher les informations sur le répertoire
+        run: dir chemin/vers/votre/dossier
+        
       - name: Créer le package
         working-directory: C:\Users\valen\Desktop\Projets\cicd\server>
         run: npm pack
