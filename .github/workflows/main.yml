@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: Créer le package
         run: npm pack
-        working-directory: C:\Users\valen\Desktop\Projets\cicd\server
+        working-directory: server
     
 
       - name: Push du package
