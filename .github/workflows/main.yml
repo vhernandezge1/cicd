@@ -81,3 +81,25 @@ jobs:
           release_name: Release v1.0.0
           draft: false
           prerelease: false
+
+  deploy:
+          needs: package
+          runs-on: windows-latest
+          steps:
+              - name: Télécharger le package
+                uses: actions/download-artifact@v2
+                with:
+                  name: my-package
+                  path: server-package
+        
+              - name: Extraire le package
+                run: |
+                  tar -xzf server-package/*.tgz -C server-package/
+        
+              # Exécuter vos commandes de déploiement ici en utilisant le contenu du package
+              - name: Exécuter le déploiement
+                run: |
+                  # Par exemple :
+                  cd server-package
+                  npm install
+                  npm run start  # Ou toute autre commande de démarrage de votre application
