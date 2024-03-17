@@ -44,26 +44,31 @@ jobs:
         run: npm audit
 
   package:
-    needs: tests
-    runs-on: windows-latest
-    steps:
-      - name: Créer le package
-        working-directory: server
-        run: npm pack     
-
-      - name: Push du package
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-package
-          path: server/*.tgz
-
-      - name: Créer une release GitHub
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
-          draft: false
-          prerelease: false
+          needs: tests
+          runs-on: windows-latest
+          steps:
+            - name: Créer le répertoire du package
+              run: mkdir -p server-package
+      
+            - name: Copier les fichiers pour le package
+              run: cp -R server/* server-package/
+      
+            - name: Zipper le package
+              run: 7z a server-package.zip server-package/*
+      
+            - name: Push du package
+              uses: actions/upload-artifact@v2
+              with:
+                name: my-package
+                path: server-package.zip
+      
+            - name: Créer une release GitHub
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                tag_name: ${{ github.sha }}
+                release_name: Release ${{ github.sha }}
+                draft: false
+                prerelease: false
