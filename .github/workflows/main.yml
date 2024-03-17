@@ -6,7 +6,7 @@ env:
 
 defaults :
   run :
-    working-directory : C:\Users\valen\Desktop\Projets\cicd\server
+    working-directory : server
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -47,8 +47,16 @@ jobs:
     needs: tests
     runs-on: windows-latest
     steps:
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with: 
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+          
       - name: Installer les dépendances
         run: npm install
+      
 
       - name: Créer le package
         run: npm run pack
