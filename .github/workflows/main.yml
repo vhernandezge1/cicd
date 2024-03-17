@@ -47,8 +47,15 @@ jobs:
     needs: tests
     runs-on: windows-latest
     steps:
-      - name: Afficher les informations sur le répertoire
-        run: dir C:\Users\valen\Desktop\Projets\cicd\server
+      - name: Vérifier l'accessibilité du répertoire
+        run: |
+         dir C:\Users\valen\Desktop\Projets\cicd\server
+    
+      - name: Afficher les informations sur le système
+        run: |
+         cd C:\Users\valen\Desktop\Projets\cicd\server
+         pwd
+         whoami
 
       - name: Créer le package
          cd C:\Users\valen\Desktop\Projets\cicd\server>
