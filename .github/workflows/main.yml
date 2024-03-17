@@ -48,7 +48,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Créer le package
-        run: npm pack
+        run: cmd /c npm pack
         working-directory: C:\Users\valen\Desktop\Projets\cicd\server
     
 
