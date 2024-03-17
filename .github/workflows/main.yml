@@ -28,19 +28,15 @@ jobs:
           cache-dependency-path: server/package-lock.json
 
       - name: Installer les dépendances
-        working-directory: server
         run: npm install
 
       - name: Exécuter les tests
-        working-directory: server
         run: npm run test:ci
 
       - name: Vérifier le code
-        working-directory: server
         run: npm run lint
 
       - name: Vérifier les vulnérabilités
-        working-directory: server
         run: npm audit
 
   package:
