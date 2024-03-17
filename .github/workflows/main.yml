@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: Checkout le code
         uses: actions/checkout@v4
-        
+
       - name: Installer Node.js
         uses: actions/setup-node@v4
         with: 
@@ -77,7 +77,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
