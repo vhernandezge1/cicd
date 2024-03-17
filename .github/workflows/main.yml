@@ -48,8 +48,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Créer le package
-        run: npm pack
         working-directory: server
+        run: npm pack
+        
     
 
       - name: Push du package
