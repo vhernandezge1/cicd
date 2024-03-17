@@ -47,19 +47,10 @@ jobs:
     needs: tests
     runs-on: windows-latest
     steps:
-      - name: Vérifier l'accessibilité du répertoire
-        run: |
-         dir C:\Users\valen\Desktop\Projets\cicd\server
-    
-      - name: Afficher les informations sur le système
-        run: |
-         cd C:\Users\valen\Desktop\Projets\cicd\server
-         pwd
-         whoami
-
       - name: Créer le package
-         cd C:\Users\valen\Desktop\Projets\cicd\server>
         run: npm pack
+        working-directory: C:\Users\valen\Desktop\Projets\cicd\server
+    
 
       - name: Push du package
         uses: actions/upload-artifact@v2
