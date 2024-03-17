@@ -2,7 +2,7 @@ name: main
 
 env:
   SERVER_USER: 'valen'
-  SERVER_IP: '192.168.1.38'
+  working directory: C:\Users\valen\Desktop\Projets\cicd
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
