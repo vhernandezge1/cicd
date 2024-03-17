@@ -6,7 +6,7 @@ env:
 
 defaults :
   run :
-    working-directory : server
+    working-directory : C:\Users\valen\Desktop\Projets\cicd\server
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -43,13 +43,13 @@ jobs:
       - name: Vérifier les vulnérabilités
         run: npm audit
 
-      - name: Créer le package
-        run: npm run pack
-
   package:
     needs: tests
     runs-on: windows-latest
     steps:
+      - name: Installer les dépendances
+        run: npm install
+
       - name: Créer le package
         run: npm run pack
         
