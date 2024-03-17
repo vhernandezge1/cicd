@@ -41,7 +41,7 @@ jobs:
         run: npm run lint
 
       - name: Vérifier les vulnérabilités
-        run: npm audit*
+        run: npm audit
 
       - name: Créer le package
         run: npm run pack
