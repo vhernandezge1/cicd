@@ -49,9 +49,8 @@ jobs:
     steps:
       - name: Créer le package
         working-directory: server
-        run: npm pack
+        run: npm run pack
         
-    
 
       - name: Push du package
         uses: actions/upload-artifact@v2
