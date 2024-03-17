@@ -51,7 +51,7 @@ jobs:
         run: dir C:\Users\valen\Desktop\Projets\cicd\server
 
       - name: Créer le package
-        working-directory: C:\Users\valen\Desktop\Projets\cicd\server>
+         cd C:\Users\valen\Desktop\Projets\cicd\server>
         run: npm pack
 
       - name: Push du package
