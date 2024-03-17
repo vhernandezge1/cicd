@@ -6,7 +6,7 @@ env:
 
 defaults :
   run :
-    working-directory : ./server
+    working-directory : server
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -41,7 +41,10 @@ jobs:
         run: npm run lint
 
       - name: Vérifier les vulnérabilités
-        run: npm audit
+        run: npm audit*
+
+      - name: Créer le package
+        run: npm run pack
 
   package:
     needs: tests
