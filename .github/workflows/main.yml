@@ -77,8 +77,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.2
-          release_name: Release v1.0.2
+          tag_name: v1.0.3
+          release_name: Release v1.0.3
           draft: false
           prerelease: false
 
@@ -106,11 +106,4 @@ jobs:
         
                   - name: Extraire le package
                     run: |
-                     tar -xzf server-package/*.tgz -C server-package/
-        
-                   # Exécuter vos commandes de déploiement ici en utilisant le contenu du package
-                  - name: Exécuter le déploiement
-                    run: |
-                     cd server-package
-                     npm install
-                     npm run start  # Ou toute autre commande de démarrage de votre application
+                     tar -xzf server-package/cicd-1.0.3.tgz -C server-package/
