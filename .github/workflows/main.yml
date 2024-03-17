@@ -1,6 +1,5 @@
 name: main
 
-
 env:
   SERVER_USER: 'valen'
   SERVER_IP: '192.168.1.38'
@@ -44,24 +43,27 @@ jobs:
         working-directory: server
         run: npm audit
 
-  deploy:
+  package:
     needs: tests
     runs-on: windows-latest
     steps:
-      - name: Checkout le code
-        uses: actions/checkout@v4
-      - name: Déployer sur le serveur
+      - name: Créer le package
+        working-directory: server
+        run: npm pack
+
+      - name: Push du package
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-package
+          path: server/*.tgz
+
+      - name: Créer une release GitHub
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          
-          
-        run: |
-          New-Item -Path $env:USERPROFILE\.ssh -ItemType Directory -Force
-          Set-Content -Path $env:USERPROFILE\.ssh\id_rsa -Value $env:SSH_PRIVATE_KEY
-          ssh-keyscan -H $env:SERVER_IP | Out-File -Append -FilePath $env:USERPROFILE\.ssh\known_hosts 
-          Copy-Item -Path server -Destination "$env:SERVER_USER@$env:SERVER_IP:/var/www" -Recurse -Force
-          ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; npm install --omit=dev"
-          ssh $env:SERVER_USER@$env:SERVER_IP "cd /var/www/server ; pm2 startOrRestart ecosystem.config.js --env production ; pm2 save"
-
-
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          draft: false
+          prerelease: false
