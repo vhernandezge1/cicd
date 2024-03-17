@@ -4,6 +4,10 @@ env:
   SERVER_USER: 'valen'
   SERVER_IP: '192.168.1.38'
 
+defaults :
+  run :
+    working-directory : ./server
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -28,19 +32,15 @@ jobs:
           cache-dependency-path: server/package-lock.json
 
       - name: Installer les dépendances
-        working-directory: server
         run: npm install
 
       - name: Exécuter les tests
-        working-directory: server
         run: npm run test:ci
 
       - name: Vérifier le code
-        working-directory: server
         run: npm run lint
 
       - name: Vérifier les vulnérabilités
-        working-directory: server
         run: npm audit
 
   package:
@@ -48,7 +48,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Créer le package
-        working-directory: server
         run: npm run pack
         
 
