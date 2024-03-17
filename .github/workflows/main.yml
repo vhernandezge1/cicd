@@ -48,8 +48,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Afficher les informations sur le répertoire
-        run: dir chemin/vers/votre/dossier
-        
+        run: dir C:\Users\valen\Desktop\Projets\cicd\server
+
       - name: Créer le package
         working-directory: C:\Users\valen\Desktop\Projets\cicd\server>
         run: npm pack
