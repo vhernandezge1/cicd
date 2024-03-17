@@ -2,7 +2,7 @@ name: main
 
 env:
   SERVER_USER: 'valen'
-  working directory: C:\Users\valen\Desktop\Projets\cicd
+  SERVER_IP: '192.168.1.38'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,35 +28,35 @@ jobs:
           cache-dependency-path: server/package-lock.json
 
       - name: Installer les dépendances
+        working-directory: server
         run: npm install
 
       - name: Exécuter les tests
+        working-directory: server
         run: npm run test:ci
 
       - name: Vérifier le code
+        working-directory: server
         run: npm run lint
 
       - name: Vérifier les vulnérabilités
+        working-directory: server
         run: npm audit
 
   package:
     needs: tests
     runs-on: windows-latest
     steps:
-      - name: Créer le répertoire du package
-        run: mkdir -p server-package
-
-      - name: Copier les fichiers pour le package
-        run: cp -R ${{ github.workspace }}/server/* ${{ github.workspace }}/server-package/
-
-      - name: Zipper le package
-        run: 7z a ${{ github.workspace }}/server-package.zip ${{ github.workspace }}/server-package/*
+      - name: Créer le package
+        run: npm pack
+        working-directory: C:\Users\valen\Desktop\Projets\cicd\server
+    
 
       - name: Push du package
         uses: actions/upload-artifact@v2
         with:
           name: my-package
-          path: ${{ github.workspace }}/server-package.zip
+          path: server/*.tgz
 
       - name: Créer une release GitHub
         id: create_release
