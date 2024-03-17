@@ -47,7 +47,16 @@ jobs:
     needs: tests
     runs-on: windows-latest
     steps:
-      
+      - name: Créer le package
+        working-directory: server
+        run: npm pack     
+
+      - name: Push du package
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-package
+          path: server/*.tgz
+
       - name: Créer une release GitHub
         id: create_release
         uses: actions/create-release@v1
