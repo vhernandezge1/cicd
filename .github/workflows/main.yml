@@ -48,8 +48,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Créer le package
-        working-directory: C:\Users\valen\Desktop\Projets\cicd\server>
-        run: npm pack
+        run: |
+         cd C:\Users\valen\Desktop\Projets\cicd\server
+         npm pack
 
       - name: Push du package
         uses: actions/upload-artifact@v2
