@@ -93,4 +93,4 @@ jobs:
         
                   - name: Extraire le package
                     run: |
-                     tar -xzf server-package/cicd-1.0.3.tgz -C server-package/
+                     
